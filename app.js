@@ -158,27 +158,28 @@ var UIController = (function() {
         expensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expensesPercLabel: '.item__percentage'        
+        expensesPercLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
     };
     
     var formatNumber = function(num, type) {
         var numSplit, int, dec;
 
-        num = Math.abs(num);
-        num = num.toFixed(2);
+        num = Math.abs(num);        // to get absolute value of number
+        num = num.toFixed(2);       // to fix the number at two decimal places
 
-        numSplit = num.split('.');
+        numSplit = num.split('.');      // split the number at the decimal point to get two separate strings
 
-        int = numSplit[0];
+        int = numSplit[0];          // to put a comma into number with over 3 digits
         if (int.length > 3) {
             int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);
         }
 
         dec = numSplit[1];
 
-        type === 'exp' ? sign = '-' : sign = '+';
+        // type === 'exp' ? sign = '-' : sign = '+'; ternery operator - to put proper sign before number
 
-        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec; 
+        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec; // formatted number is returned
         
     };
     
@@ -273,6 +274,19 @@ var UIController = (function() {
                     current.textContent = '---';
                 }    
             });            
+        },
+        
+        displayMonth: function() {
+            var now, month, months, year;
+            
+            now = new Date(); // Date function returns current date
+            
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            month = now.getMonth(); // returns year of now object
+            year = now.getFullYear(); // returns year of now object
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year; //puts month and year into HTML date label
+            
         },
         
     
@@ -388,6 +402,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     return {
       init: function() {
           console.log('Application has started.');
+          UICtrl.displayMonth();
           UICtrl.displayBudget( {
                 budget: 0,
                 totalInc: 0,
